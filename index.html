@@ -1,0 +1,800 @@
+
+
+Loan ledger · HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Loan Ledger — Free EMI &amp; Amortization Calculator</title>
+<meta name="description" content="Calculate your loan EMI, see total interest, and view a full month-by-month amortization schedule. Free, private, runs entirely in your browser." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<style>
+  :root{
+    --paper:#F1EFE6;
+    --paper-2:#E8E3D2;
+    --card:#FBF9F2;
+    --ink:#1F2A24;
+    --ink-soft:#5B6660;
+    --green:#2F5D50;
+    --green-deep:#1B3A32;
+    --gold:#B6862C;
+    --gold-soft:#D9B25F;
+    --line:#D3CDB9;
+    --brick:#9C4A3C;
+    --focus:#1768AC;
+    --radius:10px;
+    --shadow: 0 1px 0 rgba(31,42,36,0.04), 0 8px 24px -16px rgba(31,42,36,0.25);
+  }
+ 
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      repeating-linear-gradient(to bottom, transparent 0 38px, rgba(31,42,36,0.045) 38px 39px),
+      var(--paper);
+    color:var(--ink);
+    font-family:'Inter', system-ui, sans-serif;
+    font-size:16px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+ 
+  a{color:var(--green-deep);}
+ 
+  .wrap{max-width:1180px; margin:0 auto; padding:36px 24px 80px;}
+ 
+  /* ---------- Header ---------- */
+  header.page-head{
+    margin-bottom:34px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:26px;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--green-deep);
+    background:rgba(47,93,80,0.08);
+    border:1px solid rgba(47,93,80,0.25);
+    border-radius:99px;
+    padding:4px 12px;
+    margin-bottom:16px;
+  }
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;}
+  h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:clamp(32px, 4.6vw, 50px);
+    line-height:1.04;
+    margin:0 0 12px;
+    letter-spacing:-0.01em;
+  }
+  h1 .accent{color:var(--green);}
+  .tagline{
+    font-size:17px; color:var(--ink-soft); max-width:600px; margin:0;
+  }
+ 
+  /* ---------- Layout ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns: 360px 1fr;
+    gap:28px;
+    align-items:start;
+  }
+  @media (max-width: 880px){
+    .grid{grid-template-columns: 1fr;}
+  }
+ 
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+  }
+ 
+  /* ---------- Form (application slip) ---------- */
+  .slip{
+    padding:26px 24px 24px;
+    position:sticky;
+    top:24px;
+  }
+  @media (max-width: 880px){ .slip{position:static;} }
+ 
+  .slip-title{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600; font-size:14px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--ink-soft); margin:0 0 18px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .slip-title .serial{font-family:'IBM Plex Mono',monospace; font-weight:400; color:var(--gold); font-size:12px;}
+ 
+  .field{margin-bottom:20px;}
+  .field label{
+    display:block;
+    font-size:12px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--ink-soft); margin-bottom:7px; font-weight:600;
+  }
+  .field-row{display:flex; gap:10px;}
+  .field-row .field{flex:1; margin-bottom:0;}
+ 
+  .input-line{
+    display:flex; align-items:baseline; gap:6px;
+    border:none; border-bottom:1.5px solid var(--line);
+    padding:6px 2px 9px;
+    transition:border-color .15s ease;
+  }
+  .input-line:focus-within{border-bottom-color:var(--green);}
+  .input-line .prefix{font-family:'IBM Plex Mono',monospace; color:var(--ink-soft); font-size:16px;}
+  .input-line input{
+    border:none; outline:none; background:transparent;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:18px; color:var(--ink);
+    width:100%;
+    padding:0;
+  }
+  .input-line input::-webkit-outer-spin-button,
+  .input-line input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0;}
+  .input-line .suffix{font-size:13px; color:var(--ink-soft); white-space:nowrap;}
+  select.bare{
+    border:none; outline:none; background:transparent;
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--ink); font-size:16px; padding:0;
+  }
+ 
+  input:focus-visible, select:focus-visible, button:focus-visible, .seg button:focus-visible{
+    outline:2px solid var(--focus); outline-offset:2px; border-radius:3px;
+  }
+ 
+  .seg{
+    display:flex; border:1px solid var(--line); border-radius:7px; overflow:hidden;
+    width:fit-content;
+  }
+  .seg button{
+    border:none; background:var(--card); color:var(--ink-soft);
+    font-family:'IBM Plex Mono',monospace; font-size:13px;
+    padding:7px 14px; cursor:pointer;
+  }
+  .seg button + button{border-left:1px solid var(--line);}
+  .seg button.active{background:var(--green); color:#fff;}
+ 
+  .error-msg{
+    color:var(--brick); font-size:12.5px; margin-top:6px; font-family:'IBM Plex Mono',monospace;
+    min-height:0;
+  }
+ 
+  .btn{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600; font-size:15px;
+    border-radius:7px; border:none; cursor:pointer;
+    padding:13px 20px;
+    transition:transform .08s ease, background .15s ease;
+  }
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{
+    background:var(--green); color:#fff; width:100%;
+    box-shadow:0 1px 0 rgba(0,0,0,0.05);
+  }
+  .btn-primary:hover{background:var(--green-deep);}
+  .btn-ghost{
+    background:transparent; color:var(--ink-soft); border:1px solid var(--line);
+  }
+  .btn-ghost:hover{color:var(--ink); border-color:var(--ink-soft);}
+  .btn-small{padding:8px 14px; font-size:13px;}
+ 
+  .slip-actions{display:flex; gap:10px; margin-top:6px;}
+  .slip-actions .btn-ghost{flex:0 0 auto;}
+  .slip-actions .btn-primary{flex:1;}
+ 
+  .privacy-note{
+    margin-top:18px; font-size:12px; color:var(--ink-soft);
+    display:flex; gap:7px; align-items:flex-start; line-height:1.5;
+  }
+  .privacy-note svg{flex:0 0 auto; margin-top:1px;}
+ 
+  /* ---------- Results ---------- */
+  .results{display:flex; flex-direction:column; gap:22px;}
+ 
+  .result-head{
+    padding:28px 28px 24px;
+    position:relative;
+    overflow:hidden;
+  }
+  .result-head .label{
+    font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); font-weight:600;
+    margin:0 0 6px;
+  }
+  .emi-amount{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size:clamp(36px, 5vw, 54px);
+    color:var(--green-deep);
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  .emi-amount .per{font-size:16px; color:var(--ink-soft); font-family:'Inter',sans-serif; font-weight:500;}
+ 
+  .stat-row{
+    display:grid; grid-template-columns:repeat(3, 1fr);
+    gap:0;
+    margin-top:22px;
+    border-top:1px solid var(--line);
+  }
+  @media (max-width:620px){ .stat-row{grid-template-columns:1fr 1fr;} }
+  .stat{
+    padding:16px 18px 0;
+    border-right:1px solid var(--line);
+  }
+  .stat:last-child{border-right:none;}
+  @media (max-width:620px){ .stat:nth-child(2n){border-right:none;} }
+  .stat .stat-label{font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-soft); margin-bottom:5px;}
+  .stat .stat-value{font-family:'IBM Plex Mono',monospace; font-size:19px; font-weight:600; color:var(--ink);}
+  .stat .stat-value.gold{color:var(--gold);}
+ 
+  .savings-banner{
+    margin:18px 28px 0;
+    background:rgba(47,93,80,0.07);
+    border:1px solid rgba(47,93,80,0.22);
+    border-radius:8px;
+    padding:13px 16px;
+    font-size:14px;
+    display:none;
+  }
+  .savings-banner.show{display:block;}
+  .savings-banner b{color:var(--green-deep);}
+ 
+  /* stamp */
+  .stamp{
+    position:absolute; top:18px; right:22px;
+    width:108px; height:108px;
+    opacity:0; transform:scale(1.5) rotate(-4deg);
+    pointer-events:none;
+  }
+  .stamp.show{
+    animation: stampIn .55s cubic-bezier(.2,1.4,.4,1) forwards;
+  }
+  @keyframes stampIn{
+    0%{opacity:0; transform:scale(1.6) rotate(2deg);}
+    60%{opacity:1; transform:scale(0.92) rotate(-11deg);}
+    100%{opacity:.9; transform:scale(1) rotate(-9deg);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .stamp.show{animation:none; opacity:.9; transform:scale(1) rotate(-9deg);}
+  }
+  .stamp circle{fill:none; stroke:var(--green); }
+  .stamp .ring-outer{stroke-width:2.5;}
+  .stamp .ring-inner{stroke-width:1; opacity:.6;}
+  .stamp text{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px; letter-spacing:2px; fill:var(--green); font-weight:600;
+  }
+  @media (max-width:620px){ .stamp{display:none;} }
+ 
+  /* chart card */
+  .chart-card{padding:24px 24px 18px;}
+  .chart-card-title{
+    font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:17px; margin:0 0 4px;
+  }
+  .chart-card-sub{font-size:13.5px; color:var(--ink-soft); margin:0 0 16px;}
+  .legend{display:flex; gap:18px; margin-bottom:14px; font-size:12.5px; color:var(--ink-soft);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .swatch{width:10px;height:10px; border-radius:2px; display:inline-block;}
+  .chart-wrap{height:280px;}
+ 
+  /* table */
+  .table-card{padding:24px 24px 8px;}
+  .table-head-row{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:16px;
+    flex-wrap:wrap;
+  }
+  .table-card-title{font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:17px; margin:0 0 4px;}
+  .table-card-sub{font-size:13.5px; color:var(--ink-soft); margin:0;}
+ 
+  .year-group{border-top:1px solid var(--line);}
+  .year-group:last-child{border-bottom:1px solid var(--line); margin-bottom:14px;}
+  .year-row{
+    display:grid;
+    grid-template-columns: 70px 1.1fr 1fr 1fr 1fr 24px;
+    gap:10px;
+    align-items:center;
+    padding:13px 6px;
+    cursor:pointer;
+    background:transparent;
+    border:none; width:100%; text-align:left;
+    font-family:'Inter', sans-serif;
+  }
+  .year-row:hover{background:rgba(47,93,80,0.05);}
+  .year-row .yr{font-family:'IBM Plex Mono',monospace; font-weight:600; color:var(--ink);}
+  .col-label{font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); display:block; margin-bottom:2px;}
+  .cell-value{font-family:'IBM Plex Mono',monospace; font-size:14px; color:var(--ink);}
+  .cell-value.gold{color:var(--gold);}
+  .chev{transition:transform .15s ease; color:var(--ink-soft);}
+  .year-group.open .chev{transform:rotate(90deg);}
+ 
+  .month-table{display:none;}
+  .year-group.open .month-table{display:block;}
+  .month-table table{width:100%; border-collapse:collapse; margin:0 0 14px;}
+  .month-table th{
+    text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--ink-soft); padding:6px 6px; border-bottom:1px solid var(--line); font-weight:600;
+  }
+  .month-table td{
+    padding:7px 6px; font-family:'IBM Plex Mono',monospace; font-size:13px;
+    border-bottom:1px dashed var(--line); color:var(--ink);
+  }
+  .month-table tr:last-child td{border-bottom:1px solid var(--line);}
+  .table-head-grid{display:none;}
+  @media (min-width:621px){
+    .table-head-grid{
+      display:grid; grid-template-columns: 70px 1.1fr 1fr 1fr 1fr 24px; gap:10px;
+      padding:0 6px 8px; border-bottom:1px solid var(--ink);
+    }
+    .table-head-grid span{font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-soft); font-weight:600;}
+  }
+  @media (max-width:620px){
+    .year-row{grid-template-columns: 50px 1fr 1fr 20px;}
+    .year-row .cell-emi{display:none;}
+  }
+ 
+  .csv-btn{display:flex; align-items:center; gap:7px;}
+ 
+  footer.page-foot{
+    margin-top:50px; padding-top:22px; border-top:1px solid var(--line);
+    font-size:13px; color:var(--ink-soft); display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  }
+ 
+  .visually-hidden{
+    position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0);
+  }
+</style>
+</head>
+<body>
+ 
+<div class="wrap">
+ 
+  <header class="page-head">
+    <span class="eyebrow"><span class="dot"></span> Free online tool · runs in your browser</span>
+    <h1>Loan <span class="accent">Ledger</span></h1>
+    <p class="tagline">Work out your EMI in seconds, then see exactly where every payment goes — principal vs. interest — for the full life of the loan.</p>
+  </header>
+ 
+  <div class="grid">
+ 
+    <!-- FORM -->
+    <form class="card slip" id="loanForm" novalidate>
+      <p class="slip-title">Application slip <span class="serial" id="serial"></span></p>
+ 
+      <div class="field">
+        <label for="principal">Loan amount</label>
+        <div class="input-line">
+          <span class="prefix" id="currSymbol">₹</span>
+          <input type="number" id="principal" inputmode="decimal" value="1000000" min="1" step="1" required>
+        </div>
+        <div class="error-msg" id="err-principal" role="alert"></div>
+      </div>
+ 
+      <div class="field-row">
+        <div class="field">
+          <label for="rate">Interest rate</label>
+          <div class="input-line">
+            <input type="number" id="rate" inputmode="decimal" value="8.5" min="0" step="0.05" required>
+            <span class="suffix">% p.a.</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="currency">Currency</label>
+          <div class="input-line">
+            <select class="bare" id="currency">
+              <option value="INR" selected>₹ INR</option>
+              <option value="USD">$ USD</option>
+              <option value="EUR">€ EUR</option>
+              <option value="GBP">£ GBP</option>
+            </select>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="field">
+        <label for="tenure">Loan tenure</label>
+        <div class="field-row" style="align-items:center;">
+          <div class="input-line" style="flex:1;">
+            <input type="number" id="tenure" inputmode="decimal" value="20" min="1" step="1" required>
+          </div>
+          <div class="seg" id="tenureUnit">
+            <button type="button" data-unit="years" class="active">Years</button>
+            <button type="button" data-unit="months">Months</button>
+          </div>
+        </div>
+        <div class="error-msg" id="err-tenure" role="alert"></div>
+      </div>
+ 
+      <div class="field">
+        <label for="extra">Extra monthly payment <span style="text-transform:none; font-weight:400;">(optional)</span></label>
+        <div class="input-line">
+          <span class="prefix" id="currSymbol2">₹</span>
+          <input type="number" id="extra" inputmode="decimal" value="0" min="0" step="500">
+        </div>
+      </div>
+ 
+      <div class="field">
+        <label for="startDate">First EMI month</label>
+        <div class="input-line">
+          <input type="month" id="startDate">
+        </div>
+      </div>
+ 
+      <div class="slip-actions">
+        <button type="button" class="btn btn-ghost" id="resetBtn">Reset</button>
+        <button type="submit" class="btn btn-primary">Calculate EMI</button>
+      </div>
+ 
+      <p class="privacy-note">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        Nothing here is sent anywhere — every calculation happens on your device.
+      </p>
+    </form>
+ 
+    <!-- RESULTS -->
+    <div class="results">
+ 
+      <section class="card result-head" id="resultHead">
+        <svg class="stamp" id="stamp" viewBox="0 0 140 140" aria-hidden="true">
+          <defs>
+            <path id="arcTop" d="M 16,72 A 54,54 0 1 1 124,72" fill="none"/>
+            <path id="arcBottom" d="M 28,98 A 42,42 0 0 0 112,98" fill="none"/>
+          </defs>
+          <circle class="ring-outer" cx="70" cy="70" r="62"/>
+          <circle class="ring-inner" cx="70" cy="70" r="50"/>
+          <text><textPath href="#arcTop" startOffset="50%" text-anchor="middle">LOAN LEDGER</textPath></text>
+          <text><textPath href="#arcBottom" startOffset="50%" text-anchor="middle">CALCULATED</textPath></text>
+        </svg>
+ 
+        <p class="label">Monthly EMI</p>
+        <p class="emi-amount"><span id="emiValue">—</span></p>
+ 
+        <div class="stat-row">
+          <div class="stat">
+            <div class="stat-label">Total interest</div>
+            <div class="stat-value gold" id="totalInterest">—</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Total amount payable</div>
+            <div class="stat-value" id="totalPayment">—</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Loan paid off by</div>
+            <div class="stat-value" id="payoffDate">—</div>
+          </div>
+        </div>
+ 
+        <div class="savings-banner" id="savingsBanner"></div>
+      </section>
+ 
+      <section class="card chart-card">
+        <h2 class="chart-card-title">The repayment river</h2>
+        <p class="chart-card-sub">Every EMI is part principal, part interest. Early on, interest dominates — this chart shows the month it flips.</p>
+        <div class="legend">
+          <span><i class="swatch" style="background:var(--green);"></i>Principal</span>
+          <span><i class="swatch" style="background:var(--gold);"></i>Interest</span>
+        </div>
+        <div class="chart-wrap"><canvas id="riverChart"></canvas></div>
+      </section>
+ 
+      <section class="card table-card">
+        <div class="table-head-row">
+          <div>
+            <h2 class="table-card-title">Amortization schedule</h2>
+            <p class="table-card-sub">Tap a year to see the month-by-month breakdown.</p>
+          </div>
+          <button type="button" class="btn btn-ghost btn-small csv-btn" id="csvBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M5 19h14"/></svg>
+            Download CSV
+          </button>
+        </div>
+ 
+        <div class="table-head-grid">
+          <span>Year</span><span>EMI paid</span><span>Principal</span><span>Interest</span><span>Year-end balance</span><span></span>
+        </div>
+ 
+        <div id="yearGroups"></div>
+      </section>
+ 
+    </div>
+  </div>
+ 
+  <footer class="page-foot">
+    <span>Loan Ledger — a free EMI &amp; amortization calculator. No sign-up, no tracking, no data leaves your browser.</span>
+    <span id="todayStamp"></span>
+  </footer>
+</div>
+ 
+<script>
+(function(){
+  "use strict";
+ 
+  var CURRENCY = { INR:{symbol:"₹", locale:"en-IN"}, USD:{symbol:"$", locale:"en-US"}, EUR:{symbol:"€", locale:"de-DE"}, GBP:{symbol:"£", locale:"en-GB"} };
+  var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+ 
+  var els = {
+    form: document.getElementById('loanForm'),
+    principal: document.getElementById('principal'),
+    rate: document.getElementById('rate'),
+    tenure: document.getElementById('tenure'),
+    extra: document.getElementById('extra'),
+    currency: document.getElementById('currency'),
+    startDate: document.getElementById('startDate'),
+    currSymbol: document.getElementById('currSymbol'),
+    currSymbol2: document.getElementById('currSymbol2'),
+    tenureUnit: document.getElementById('tenureUnit'),
+    errPrincipal: document.getElementById('err-principal'),
+    errTenure: document.getElementById('err-tenure'),
+    emiValue: document.getElementById('emiValue'),
+    totalInterest: document.getElementById('totalInterest'),
+    totalPayment: document.getElementById('totalPayment'),
+    payoffDate: document.getElementById('payoffDate'),
+    savingsBanner: document.getElementById('savingsBanner'),
+    stamp: document.getElementById('stamp'),
+    yearGroups: document.getElementById('yearGroups'),
+    csvBtn: document.getElementById('csvBtn'),
+    resetBtn: document.getElementById('resetBtn'),
+    serial: document.getElementById('serial'),
+    todayStamp: document.getElementById('todayStamp')
+  };
+ 
+  var state = { unit: 'years', lastRows: null, lastCurrency: 'INR' };
+ 
+  function nowMonthValue(){
+    var d = new Date();
+    var y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0');
+    return y + '-' + m;
+  }
+  els.startDate.value = nowMonthValue();
+  els.serial.textContent = '#' + String(Date.now()).slice(-6);
+  els.todayStamp.textContent = 'Calculations run locally · ' + new Date().toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'});
+ 
+  els.tenureUnit.addEventListener('click', function(e){
+    var btn = e.target.closest('button');
+    if(!btn) return;
+    state.unit = btn.dataset.unit;
+    Array.prototype.forEach.call(els.tenureUnit.querySelectorAll('button'), function(b){ b.classList.toggle('active', b===btn); });
+  });
+ 
+  els.currency.addEventListener('change', function(){
+    var sym = CURRENCY[els.currency.value].symbol;
+    els.currSymbol.textContent = sym;
+    els.currSymbol2.textContent = sym;
+  });
+ 
+  function formatMoney(value, currencyCode, maxDigits){
+    var c = CURRENCY[currencyCode] || CURRENCY.INR;
+    try{
+      return new Intl.NumberFormat(c.locale, { style:'currency', currency: currencyCode, maximumFractionDigits: (maxDigits===undefined?0:maxDigits) }).format(value);
+    }catch(e){
+      return c.symbol + Math.round(value).toLocaleString();
+    }
+  }
+ 
+  function computeEMI(P, annualRatePct, months){
+    var r = annualRatePct/12/100;
+    if(r === 0) return P/months;
+    var factor = Math.pow(1+r, months);
+    return (P * r * factor) / (factor - 1);
+  }
+ 
+  function buildSchedule(P, annualRatePct, months, extra){
+    var r = annualRatePct/12/100;
+    var emi = computeEMI(P, annualRatePct, months);
+    var balance = P, totalInterest = 0, rows = [], m = 0;
+    var safety = months*4 + 36;
+    while(balance > 0.5 && m < safety){
+      m++;
+      var interest = balance * r;
+      var principalPaid = emi - interest + (extra||0);
+      if(principalPaid > balance) principalPaid = balance;
+      var actualEmi = principalPaid + interest;
+      balance -= principalPaid;
+      if(balance < 0) balance = 0;
+      totalInterest += interest;
+      rows.push({ m:m, emi:actualEmi, principal:principalPaid, interest:interest, balance:balance });
+    }
+    return { rows:rows, emi:emi, totalInterest:totalInterest, totalPayment:P+totalInterest, actualMonths:m };
+  }
+ 
+  function groupByYear(rows){
+    var groups = [];
+    for(var i=0;i<rows.length;i++){
+      var yearIdx = Math.floor(i/12);
+      if(!groups[yearIdx]) groups[yearIdx] = { year:yearIdx+1, rows:[], principal:0, interest:0, emiPaid:0, endBalance:0 };
+      var g = groups[yearIdx];
+      g.rows.push(rows[i]);
+      g.principal += rows[i].principal;
+      g.interest += rows[i].interest;
+      g.emiPaid += rows[i].emi;
+      g.endBalance = rows[i].balance;
+    }
+    return groups;
+  }
+ 
+  function addMonths(monthValue, n){
+    var parts = monthValue.split('-');
+    var y = parseInt(parts[0],10), m = parseInt(parts[1],10) - 1;
+    var d = new Date(y, m + n, 1);
+    return MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+  }
+ 
+  function clearErrors(){
+    els.errPrincipal.textContent = '';
+    els.errTenure.textContent = '';
+  }
+ 
+  function validate(P, rate, tenureRaw){
+    clearErrors();
+    var ok = true;
+    if(!(P > 0)){ els.errPrincipal.textContent = 'Enter a loan amount greater than zero.'; ok = false; }
+    if(!(tenureRaw > 0)){ els.errTenure.textContent = 'Enter a tenure greater than zero.'; ok = false; }
+    if(rate < 0){ ok = false; }
+    return ok;
+  }
+ 
+  function renderStamp(){
+    els.stamp.classList.remove('show');
+    void els.stamp.offsetWidth;
+    requestAnimationFrame(function(){ els.stamp.classList.add('show'); });
+  }
+ 
+  var chartInstance = null;
+  function renderChart(rows, currencyCode){
+    var labels = rows.map(function(r){ return 'M' + r.m; });
+    var principalData = rows.map(function(r){ return Math.round(r.principal); });
+    var interestData = rows.map(function(r){ return Math.round(r.interest); });
+ 
+    if(chartInstance){ chartInstance.destroy(); }
+    var ctx = document.getElementById('riverChart').getContext('2d');
+    chartInstance = new Chart(ctx, {
+      type:'line',
+      data:{
+        labels: labels,
+        datasets:[
+          { label:'Principal', data: principalData, borderColor:'#2F5D50', backgroundColor:'rgba(47,93,80,0.35)', fill:true, pointRadius:0, borderWidth:1.5, tension:0, order:2 },
+          { label:'Interest', data: interestData, borderColor:'#B6862C', backgroundColor:'rgba(182,134,44,0.35)', fill:true, pointRadius:0, borderWidth:1.5, tension:0, order:1 }
+        ]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        interaction:{ mode:'index', intersect:false },
+        plugins:{
+          legend:{ display:false },
+          tooltip:{
+            callbacks:{
+              title: function(items){ return 'Month ' + items[0].label.replace('M',''); },
+              label: function(item){ return item.dataset.label + ': ' + formatMoney(item.parsed.y, currencyCode); }
+            }
+          }
+        },
+        scales:{
+          x:{ ticks:{ maxTicksLimit:8, color:'#5B6660', font:{family:'IBM Plex Mono', size:11} }, grid:{ display:false } },
+          y:{ stacked:true, ticks:{ color:'#5B6660', font:{family:'IBM Plex Mono', size:11}, callback:function(v){ return formatMoney(v, currencyCode); } }, grid:{ color:'rgba(211,205,185,0.6)' } }
+        }
+      }
+    });
+  }
+ 
+  function renderTable(groups, currencyCode){
+    els.yearGroups.innerHTML = '';
+    groups.forEach(function(g){
+      var wrap = document.createElement('div');
+      wrap.className = 'year-group';
+ 
+      var row = document.createElement('button');
+      row.type = 'button';
+      row.className = 'year-row';
+      row.setAttribute('aria-expanded','false');
+      row.innerHTML =
+        '<span class="yr">Y' + g.year + '</span>' +
+        '<span class="cell-emi"><span class="col-label" aria-hidden="true">EMI paid</span><span class="cell-value">' + formatMoney(g.emiPaid, currencyCode) + '</span></span>' +
+        '<span><span class="col-label" aria-hidden="true">Principal</span><span class="cell-value">' + formatMoney(g.principal, currencyCode) + '</span></span>' +
+        '<span><span class="col-label" aria-hidden="true">Interest</span><span class="cell-value gold">' + formatMoney(g.interest, currencyCode) + '</span></span>' +
+        '<span><span class="col-label" aria-hidden="true">Balance</span><span class="cell-value">' + formatMoney(g.endBalance, currencyCode) + '</span></span>' +
+        '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>';
+ 
+      var detail = document.createElement('div');
+      detail.className = 'month-table';
+      var tbl = document.createElement('table');
+      var thead = '<thead><tr><th>Month</th><th>EMI</th><th>Principal</th><th>Interest</th><th>Balance</th></tr></thead>';
+      var tbody = '<tbody>' + g.rows.map(function(r){
+        return '<tr><td>#' + r.m + '</td><td>' + formatMoney(r.emi, currencyCode) + '</td><td>' + formatMoney(r.principal, currencyCode) + '</td><td>' + formatMoney(r.interest, currencyCode) + '</td><td>' + formatMoney(r.balance, currencyCode) + '</td></tr>';
+      }).join('') + '</tbody>';
+      tbl.innerHTML = thead + tbody;
+      detail.appendChild(tbl);
+ 
+      row.addEventListener('click', function(){
+        var open = wrap.classList.toggle('open');
+        row.setAttribute('aria-expanded', open ? 'true':'false');
+      });
+ 
+      wrap.appendChild(row);
+      wrap.appendChild(detail);
+      els.yearGroups.appendChild(wrap);
+    });
+  }
+ 
+  function exportCSV(){
+    if(!state.lastRows) return;
+    var lines = ['Month,EMI,Principal,Interest,Balance'];
+    state.lastRows.forEach(function(r){
+      lines.push([r.m, r.emi.toFixed(2), r.principal.toFixed(2), r.interest.toFixed(2), r.balance.toFixed(2)].join(','));
+    });
+    var blob = new Blob([lines.join('\n')], { type:'text/csv;charset=utf-8;' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'amortization-schedule.csv';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+  els.csvBtn.addEventListener('click', exportCSV);
+ 
+  els.resetBtn.addEventListener('click', function(){
+    els.principal.value = 1000000;
+    els.rate.value = 8.5;
+    els.tenure.value = 20;
+    els.extra.value = 0;
+    els.currency.value = 'INR';
+    els.currSymbol.textContent = '₹';
+    els.currSymbol2.textContent = '₹';
+    state.unit = 'years';
+    Array.prototype.forEach.call(els.tenureUnit.querySelectorAll('button'), function(b){ b.classList.toggle('active', b.dataset.unit==='years'); });
+    els.startDate.value = nowMonthValue();
+    clearErrors();
+  });
+ 
+  els.form.addEventListener('submit', function(e){
+    e.preventDefault();
+ 
+    var P = parseFloat(els.principal.value);
+    var rate = parseFloat(els.rate.value) || 0;
+    var tenureRaw = parseFloat(els.tenure.value);
+    var extra = parseFloat(els.extra.value) || 0;
+    var currencyCode = els.currency.value;
+ 
+    if(!validate(P, rate, tenureRaw)) return;
+ 
+    var months = state.unit === 'years' ? Math.round(tenureRaw*12) : Math.round(tenureRaw);
+ 
+    var result = buildSchedule(P, rate, months, extra);
+    state.lastRows = result.rows;
+    state.lastCurrency = currencyCode;
+ 
+    els.emiValue.innerHTML = formatMoney(result.emi, currencyCode) + ' <span class="per">/ month</span>';
+    els.totalInterest.textContent = formatMoney(result.totalInterest, currencyCode);
+    els.totalPayment.textContent = formatMoney(result.totalPayment, currencyCode);
+    els.payoffDate.textContent = addMonths(els.startDate.value, result.actualMonths - 1);
+ 
+    if(extra > 0){
+      var baselineInterest = result.emi * months - P;
+      var monthsSaved = months - result.actualMonths;
+      var interestSaved = baselineInterest - result.totalInterest;
+      if(interestSaved > 0 && monthsSaved >= 0){
+        els.savingsBanner.classList.add('show');
+        els.savingsBanner.innerHTML = 'Paying an extra ' + formatMoney(extra, currencyCode) + ' every month finishes this loan <b>' + monthsSaved + ' month' + (monthsSaved===1?'':'s') + ' early</b> and saves <b>' + formatMoney(interestSaved, currencyCode) + '</b> in interest.';
+      } else {
+        els.savingsBanner.classList.remove('show');
+      }
+    } else {
+      els.savingsBanner.classList.remove('show');
+    }
+ 
+    renderStamp();
+    renderChart(result.rows, currencyCode);
+    renderTable(groupByYear(result.rows), currencyCode);
+  });
+ 
+  // run once on load with defaults
+  els.form.dispatchEvent(new Event('submit', { cancelable:true }));
+ 
+})();
+</script>
+</body>
+</html>
