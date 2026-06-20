@@ -1,6 +1,3 @@
-
-
-Loan ledger · HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,7 +26,7 @@ Loan ledger · HTML
     --radius:10px;
     --shadow: 0 1px 0 rgba(31,42,36,0.04), 0 8px 24px -16px rgba(31,42,36,0.25);
   }
- 
+
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
@@ -42,11 +39,11 @@ Loan ledger · HTML
     line-height:1.5;
     -webkit-font-smoothing:antialiased;
   }
- 
+
   a{color:var(--green-deep);}
- 
+
   .wrap{max-width:1180px; margin:0 auto; padding:36px 24px 80px;}
- 
+
   /* ---------- Header ---------- */
   header.page-head{
     margin-bottom:34px;
@@ -77,7 +74,7 @@ Loan ledger · HTML
   .tagline{
     font-size:17px; color:var(--ink-soft); max-width:600px; margin:0;
   }
- 
+
   /* ---------- Layout ---------- */
   .grid{
     display:grid;
@@ -88,14 +85,14 @@ Loan ledger · HTML
   @media (max-width: 880px){
     .grid{grid-template-columns: 1fr;}
   }
- 
+
   .card{
     background:var(--card);
     border:1px solid var(--line);
     border-radius:var(--radius);
     box-shadow:var(--shadow);
   }
- 
+
   /* ---------- Form (application slip) ---------- */
   .slip{
     padding:26px 24px 24px;
@@ -103,7 +100,7 @@ Loan ledger · HTML
     top:24px;
   }
   @media (max-width: 880px){ .slip{position:static;} }
- 
+
   .slip-title{
     font-family:'Space Grotesk', sans-serif;
     font-weight:600; font-size:14px; letter-spacing:.06em; text-transform:uppercase;
@@ -111,7 +108,7 @@ Loan ledger · HTML
     display:flex; align-items:center; justify-content:space-between;
   }
   .slip-title .serial{font-family:'IBM Plex Mono',monospace; font-weight:400; color:var(--gold); font-size:12px;}
- 
+
   .field{margin-bottom:20px;}
   .field label{
     display:block;
@@ -120,7 +117,7 @@ Loan ledger · HTML
   }
   .field-row{display:flex; gap:10px;}
   .field-row .field{flex:1; margin-bottom:0;}
- 
+
   .input-line{
     display:flex; align-items:baseline; gap:6px;
     border:none; border-bottom:1.5px solid var(--line);
@@ -144,11 +141,11 @@ Loan ledger · HTML
     font-family:'IBM Plex Mono', monospace;
     color:var(--ink); font-size:16px; padding:0;
   }
- 
+
   input:focus-visible, select:focus-visible, button:focus-visible, .seg button:focus-visible{
     outline:2px solid var(--focus); outline-offset:2px; border-radius:3px;
   }
- 
+
   .seg{
     display:flex; border:1px solid var(--line); border-radius:7px; overflow:hidden;
     width:fit-content;
@@ -160,12 +157,12 @@ Loan ledger · HTML
   }
   .seg button + button{border-left:1px solid var(--line);}
   .seg button.active{background:var(--green); color:#fff;}
- 
+
   .error-msg{
     color:var(--brick); font-size:12.5px; margin-top:6px; font-family:'IBM Plex Mono',monospace;
     min-height:0;
   }
- 
+
   .btn{
     font-family:'Space Grotesk', sans-serif;
     font-weight:600; font-size:15px;
@@ -184,20 +181,20 @@ Loan ledger · HTML
   }
   .btn-ghost:hover{color:var(--ink); border-color:var(--ink-soft);}
   .btn-small{padding:8px 14px; font-size:13px;}
- 
+
   .slip-actions{display:flex; gap:10px; margin-top:6px;}
   .slip-actions .btn-ghost{flex:0 0 auto;}
   .slip-actions .btn-primary{flex:1;}
- 
+
   .privacy-note{
     margin-top:18px; font-size:12px; color:var(--ink-soft);
     display:flex; gap:7px; align-items:flex-start; line-height:1.5;
   }
   .privacy-note svg{flex:0 0 auto; margin-top:1px;}
- 
+
   /* ---------- Results ---------- */
   .results{display:flex; flex-direction:column; gap:22px;}
- 
+
   .result-head{
     padding:28px 28px 24px;
     position:relative;
@@ -216,7 +213,7 @@ Loan ledger · HTML
     letter-spacing:-0.01em;
   }
   .emi-amount .per{font-size:16px; color:var(--ink-soft); font-family:'Inter',sans-serif; font-weight:500;}
- 
+
   .stat-row{
     display:grid; grid-template-columns:repeat(3, 1fr);
     gap:0;
@@ -233,7 +230,7 @@ Loan ledger · HTML
   .stat .stat-label{font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-soft); margin-bottom:5px;}
   .stat .stat-value{font-family:'IBM Plex Mono',monospace; font-size:19px; font-weight:600; color:var(--ink);}
   .stat .stat-value.gold{color:var(--gold);}
- 
+
   .savings-banner{
     margin:18px 28px 0;
     background:rgba(47,93,80,0.07);
@@ -245,7 +242,7 @@ Loan ledger · HTML
   }
   .savings-banner.show{display:block;}
   .savings-banner b{color:var(--green-deep);}
- 
+
   /* stamp */
   .stamp{
     position:absolute; top:18px; right:22px;
@@ -272,7 +269,7 @@ Loan ledger · HTML
     font-size:10.5px; letter-spacing:2px; fill:var(--green); font-weight:600;
   }
   @media (max-width:620px){ .stamp{display:none;} }
- 
+
   /* chart card */
   .chart-card{padding:24px 24px 18px;}
   .chart-card-title{
@@ -283,7 +280,7 @@ Loan ledger · HTML
   .legend span{display:inline-flex; align-items:center; gap:6px;}
   .swatch{width:10px;height:10px; border-radius:2px; display:inline-block;}
   .chart-wrap{height:280px;}
- 
+
   /* table */
   .table-card{padding:24px 24px 8px;}
   .table-head-row{
@@ -292,7 +289,7 @@ Loan ledger · HTML
   }
   .table-card-title{font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:17px; margin:0 0 4px;}
   .table-card-sub{font-size:13.5px; color:var(--ink-soft); margin:0;}
- 
+
   .year-group{border-top:1px solid var(--line);}
   .year-group:last-child{border-bottom:1px solid var(--line); margin-bottom:14px;}
   .year-row{
@@ -313,7 +310,7 @@ Loan ledger · HTML
   .cell-value.gold{color:var(--gold);}
   .chev{transition:transform .15s ease; color:var(--ink-soft);}
   .year-group.open .chev{transform:rotate(90deg);}
- 
+
   .month-table{display:none;}
   .year-group.open .month-table{display:block;}
   .month-table table{width:100%; border-collapse:collapse; margin:0 0 14px;}
@@ -338,35 +335,52 @@ Loan ledger · HTML
     .year-row{grid-template-columns: 50px 1fr 1fr 20px;}
     .year-row .cell-emi{display:none;}
   }
- 
+
   .csv-btn{display:flex; align-items:center; gap:7px;}
- 
-  footer.page-foot{
+
+  .credit-bar{
     margin-top:50px; padding-top:22px; border-top:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;
+  }
+  .credit-bar .credit-text{font-size:13.5px; color:var(--ink-soft); line-height:1.6;}
+  .credit-bar .credit-text strong{color:var(--ink); font-weight:600;}
+  .credit-bar .credit-text a{color:var(--green-deep); text-decoration:none; border-bottom:1px solid var(--line);}
+  .credit-bar .credit-text a:hover{border-bottom-color:var(--green-deep);}
+  .btn-dh{
+    display:inline-flex; align-items:center; gap:7px;
+    background:var(--green); color:#fff !important; text-decoration:none;
+    font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:13.5px;
+    padding:10px 18px; border-radius:7px; transition:background .15s ease;
+    white-space:nowrap;
+  }
+  .btn-dh:hover{background:var(--green-deep);}
+
+  footer.page-foot{
+    margin-top:14px; padding-top:14px;
     font-size:13px; color:var(--ink-soft); display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
   }
- 
+
   .visually-hidden{
     position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0);
   }
 </style>
 </head>
 <body>
- 
+
 <div class="wrap">
- 
+
   <header class="page-head">
     <span class="eyebrow"><span class="dot"></span> Free online tool · runs in your browser</span>
     <h1>Loan <span class="accent">Ledger</span></h1>
     <p class="tagline">Work out your EMI in seconds, then see exactly where every payment goes — principal vs. interest — for the full life of the loan.</p>
   </header>
- 
+
   <div class="grid">
- 
+
     <!-- FORM -->
     <form class="card slip" id="loanForm" novalidate>
       <p class="slip-title">Application slip <span class="serial" id="serial"></span></p>
- 
+
       <div class="field">
         <label for="principal">Loan amount</label>
         <div class="input-line">
@@ -375,7 +389,7 @@ Loan ledger · HTML
         </div>
         <div class="error-msg" id="err-principal" role="alert"></div>
       </div>
- 
+
       <div class="field-row">
         <div class="field">
           <label for="rate">Interest rate</label>
@@ -396,7 +410,7 @@ Loan ledger · HTML
           </div>
         </div>
       </div>
- 
+
       <div class="field">
         <label for="tenure">Loan tenure</label>
         <div class="field-row" style="align-items:center;">
@@ -410,7 +424,7 @@ Loan ledger · HTML
         </div>
         <div class="error-msg" id="err-tenure" role="alert"></div>
       </div>
- 
+
       <div class="field">
         <label for="extra">Extra monthly payment <span style="text-transform:none; font-weight:400;">(optional)</span></label>
         <div class="input-line">
@@ -418,28 +432,28 @@ Loan ledger · HTML
           <input type="number" id="extra" inputmode="decimal" value="0" min="0" step="500">
         </div>
       </div>
- 
+
       <div class="field">
         <label for="startDate">First EMI month</label>
         <div class="input-line">
           <input type="month" id="startDate">
         </div>
       </div>
- 
+
       <div class="slip-actions">
         <button type="button" class="btn btn-ghost" id="resetBtn">Reset</button>
         <button type="submit" class="btn btn-primary">Calculate EMI</button>
       </div>
- 
+
       <p class="privacy-note">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
         Nothing here is sent anywhere — every calculation happens on your device.
       </p>
     </form>
- 
+
     <!-- RESULTS -->
     <div class="results">
- 
+
       <section class="card result-head" id="resultHead">
         <svg class="stamp" id="stamp" viewBox="0 0 140 140" aria-hidden="true">
           <defs>
@@ -451,10 +465,10 @@ Loan ledger · HTML
           <text><textPath href="#arcTop" startOffset="50%" text-anchor="middle">LOAN LEDGER</textPath></text>
           <text><textPath href="#arcBottom" startOffset="50%" text-anchor="middle">CALCULATED</textPath></text>
         </svg>
- 
+
         <p class="label">Monthly EMI</p>
         <p class="emi-amount"><span id="emiValue">—</span></p>
- 
+
         <div class="stat-row">
           <div class="stat">
             <div class="stat-label">Total interest</div>
@@ -469,10 +483,10 @@ Loan ledger · HTML
             <div class="stat-value" id="payoffDate">—</div>
           </div>
         </div>
- 
+
         <div class="savings-banner" id="savingsBanner"></div>
       </section>
- 
+
       <section class="card chart-card">
         <h2 class="chart-card-title">The repayment river</h2>
         <p class="chart-card-sub">Every EMI is part principal, part interest. Early on, interest dominates — this chart shows the month it flips.</p>
@@ -482,7 +496,7 @@ Loan ledger · HTML
         </div>
         <div class="chart-wrap"><canvas id="riverChart"></canvas></div>
       </section>
- 
+
       <section class="card table-card">
         <div class="table-head-row">
           <div>
@@ -494,30 +508,38 @@ Loan ledger · HTML
             Download CSV
           </button>
         </div>
- 
+
         <div class="table-head-grid">
           <span>Year</span><span>EMI paid</span><span>Principal</span><span>Interest</span><span>Year-end balance</span><span></span>
         </div>
- 
+
         <div id="yearGroups"></div>
       </section>
- 
+
     </div>
   </div>
- 
+
+  <div class="credit-bar">
+    <p class="credit-text">
+      Built by <strong>Vatsal Awasthi</strong> ·
+      <a href="mailto:mail.vatsalawasthi@gmail.com">mail.vatsalawasthi@gmail.com</a>
+    </p>
+    <a class="btn-dh" href="https://digitalheroesco.com" target="_blank" rel="noopener noreferrer">Built for Digital Heroes</a>
+  </div>
+
   <footer class="page-foot">
     <span>Loan Ledger — a free EMI &amp; amortization calculator. No sign-up, no tracking, no data leaves your browser.</span>
     <span id="todayStamp"></span>
   </footer>
 </div>
- 
+
 <script>
 (function(){
   "use strict";
- 
+
   var CURRENCY = { INR:{symbol:"₹", locale:"en-IN"}, USD:{symbol:"$", locale:"en-US"}, EUR:{symbol:"€", locale:"de-DE"}, GBP:{symbol:"£", locale:"en-GB"} };
   var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
- 
+
   var els = {
     form: document.getElementById('loanForm'),
     principal: document.getElementById('principal'),
@@ -543,9 +565,9 @@ Loan ledger · HTML
     serial: document.getElementById('serial'),
     todayStamp: document.getElementById('todayStamp')
   };
- 
+
   var state = { unit: 'years', lastRows: null, lastCurrency: 'INR' };
- 
+
   function nowMonthValue(){
     var d = new Date();
     var y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0');
@@ -554,20 +576,20 @@ Loan ledger · HTML
   els.startDate.value = nowMonthValue();
   els.serial.textContent = '#' + String(Date.now()).slice(-6);
   els.todayStamp.textContent = 'Calculations run locally · ' + new Date().toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'});
- 
+
   els.tenureUnit.addEventListener('click', function(e){
     var btn = e.target.closest('button');
     if(!btn) return;
     state.unit = btn.dataset.unit;
     Array.prototype.forEach.call(els.tenureUnit.querySelectorAll('button'), function(b){ b.classList.toggle('active', b===btn); });
   });
- 
+
   els.currency.addEventListener('change', function(){
     var sym = CURRENCY[els.currency.value].symbol;
     els.currSymbol.textContent = sym;
     els.currSymbol2.textContent = sym;
   });
- 
+
   function formatMoney(value, currencyCode, maxDigits){
     var c = CURRENCY[currencyCode] || CURRENCY.INR;
     try{
@@ -576,14 +598,14 @@ Loan ledger · HTML
       return c.symbol + Math.round(value).toLocaleString();
     }
   }
- 
+
   function computeEMI(P, annualRatePct, months){
     var r = annualRatePct/12/100;
     if(r === 0) return P/months;
     var factor = Math.pow(1+r, months);
     return (P * r * factor) / (factor - 1);
   }
- 
+
   function buildSchedule(P, annualRatePct, months, extra){
     var r = annualRatePct/12/100;
     var emi = computeEMI(P, annualRatePct, months);
@@ -602,7 +624,7 @@ Loan ledger · HTML
     }
     return { rows:rows, emi:emi, totalInterest:totalInterest, totalPayment:P+totalInterest, actualMonths:m };
   }
- 
+
   function groupByYear(rows){
     var groups = [];
     for(var i=0;i<rows.length;i++){
@@ -617,19 +639,19 @@ Loan ledger · HTML
     }
     return groups;
   }
- 
+
   function addMonths(monthValue, n){
     var parts = monthValue.split('-');
     var y = parseInt(parts[0],10), m = parseInt(parts[1],10) - 1;
     var d = new Date(y, m + n, 1);
     return MONTHS[d.getMonth()] + ' ' + d.getFullYear();
   }
- 
+
   function clearErrors(){
     els.errPrincipal.textContent = '';
     els.errTenure.textContent = '';
   }
- 
+
   function validate(P, rate, tenureRaw){
     clearErrors();
     var ok = true;
@@ -638,19 +660,19 @@ Loan ledger · HTML
     if(rate < 0){ ok = false; }
     return ok;
   }
- 
+
   function renderStamp(){
     els.stamp.classList.remove('show');
     void els.stamp.offsetWidth;
     requestAnimationFrame(function(){ els.stamp.classList.add('show'); });
   }
- 
+
   var chartInstance = null;
   function renderChart(rows, currencyCode){
     var labels = rows.map(function(r){ return 'M' + r.m; });
     var principalData = rows.map(function(r){ return Math.round(r.principal); });
     var interestData = rows.map(function(r){ return Math.round(r.interest); });
- 
+
     if(chartInstance){ chartInstance.destroy(); }
     var ctx = document.getElementById('riverChart').getContext('2d');
     chartInstance = new Chart(ctx, {
@@ -681,13 +703,13 @@ Loan ledger · HTML
       }
     });
   }
- 
+
   function renderTable(groups, currencyCode){
     els.yearGroups.innerHTML = '';
     groups.forEach(function(g){
       var wrap = document.createElement('div');
       wrap.className = 'year-group';
- 
+
       var row = document.createElement('button');
       row.type = 'button';
       row.className = 'year-row';
@@ -699,7 +721,7 @@ Loan ledger · HTML
         '<span><span class="col-label" aria-hidden="true">Interest</span><span class="cell-value gold">' + formatMoney(g.interest, currencyCode) + '</span></span>' +
         '<span><span class="col-label" aria-hidden="true">Balance</span><span class="cell-value">' + formatMoney(g.endBalance, currencyCode) + '</span></span>' +
         '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>';
- 
+
       var detail = document.createElement('div');
       detail.className = 'month-table';
       var tbl = document.createElement('table');
@@ -709,18 +731,18 @@ Loan ledger · HTML
       }).join('') + '</tbody>';
       tbl.innerHTML = thead + tbody;
       detail.appendChild(tbl);
- 
+
       row.addEventListener('click', function(){
         var open = wrap.classList.toggle('open');
         row.setAttribute('aria-expanded', open ? 'true':'false');
       });
- 
+
       wrap.appendChild(row);
       wrap.appendChild(detail);
       els.yearGroups.appendChild(wrap);
     });
   }
- 
+
   function exportCSV(){
     if(!state.lastRows) return;
     var lines = ['Month,EMI,Principal,Interest,Balance'];
@@ -735,7 +757,7 @@ Loan ledger · HTML
     URL.revokeObjectURL(url);
   }
   els.csvBtn.addEventListener('click', exportCSV);
- 
+
   els.resetBtn.addEventListener('click', function(){
     els.principal.value = 1000000;
     els.rate.value = 8.5;
@@ -749,29 +771,29 @@ Loan ledger · HTML
     els.startDate.value = nowMonthValue();
     clearErrors();
   });
- 
+
   els.form.addEventListener('submit', function(e){
     e.preventDefault();
- 
+
     var P = parseFloat(els.principal.value);
     var rate = parseFloat(els.rate.value) || 0;
     var tenureRaw = parseFloat(els.tenure.value);
     var extra = parseFloat(els.extra.value) || 0;
     var currencyCode = els.currency.value;
- 
+
     if(!validate(P, rate, tenureRaw)) return;
- 
+
     var months = state.unit === 'years' ? Math.round(tenureRaw*12) : Math.round(tenureRaw);
- 
+
     var result = buildSchedule(P, rate, months, extra);
     state.lastRows = result.rows;
     state.lastCurrency = currencyCode;
- 
+
     els.emiValue.innerHTML = formatMoney(result.emi, currencyCode) + ' <span class="per">/ month</span>';
     els.totalInterest.textContent = formatMoney(result.totalInterest, currencyCode);
     els.totalPayment.textContent = formatMoney(result.totalPayment, currencyCode);
     els.payoffDate.textContent = addMonths(els.startDate.value, result.actualMonths - 1);
- 
+
     if(extra > 0){
       var baselineInterest = result.emi * months - P;
       var monthsSaved = months - result.actualMonths;
@@ -785,15 +807,15 @@ Loan ledger · HTML
     } else {
       els.savingsBanner.classList.remove('show');
     }
- 
+
     renderStamp();
     renderChart(result.rows, currencyCode);
     renderTable(groupByYear(result.rows), currencyCode);
   });
- 
+
   // run once on load with defaults
   els.form.dispatchEvent(new Event('submit', { cancelable:true }));
- 
+
 })();
 </script>
 </body>
